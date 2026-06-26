@@ -45,3 +45,4 @@ bin/
 # Environment
 .env
 *.log
+/src/main/resources/application-local.yml
