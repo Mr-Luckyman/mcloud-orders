@@ -15,6 +15,7 @@ docker run --rm confluentinc/cp-kafka:7.7.1 kafka-storage random-uuid
 # Добавь в .env
 KAFKA_CLUSTER_ID=твой_uuid
 ```
+
 ### 2. Запуск
 
 ```bash
@@ -57,12 +58,46 @@ docker-compose logs kafka --tail 50
 
 AKHQ: http://localhost:8085
 
-### 📁 Структура
+### 🚀 Запуск приложения
 
-```text
-mcloud-orders/
-├── docker-compose.yml
-├── .env
-├── .env.example
-└── README.md
+```bash
+# С профилем local (разработка)
+./gradlew bootRun --args='--spring.profiles.active=local'
+
+# Или через IDEA с VM options: -Dspring.profiles.active=local
 ```
+
+### 🏥 Проверка здоровья
+```bash
+curl http://localhost:8080/actuator/health
+```
+Ожидаемый ответ:
+
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": {"status": "UP"},
+    "kafka": {"status": "UP"},
+    "livenessState": {"status": "UP"},
+    "readinessState": {"status": "UP"}
+  }
+}
+```
+
+### 🔧 Spring-профили
+
+| Профиль	 | Описание                                                            |
+|----------|---------------------------------------------------------------------|
+| local	   | Для локальной разработки. Использует PostgreSQL, Kafka на localhost |
+| test	    | Для тестов. Использует H2 in-memory, Kafka заглушки                 |
+| ci	      | Для CI/CD. Использует H2 in-memory, не требует внешних сервисов     |
+
+### 📚 OpenAPI контракт
+
+Документация API доступна в docs/api/order-api.yaml
+
+### 🧪 CI/CD
+Проект использует GitHub Actions для CI. При каждом push'е запускаются тесты.
+
+См. .github/workflows/ci.yml
