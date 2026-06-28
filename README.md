@@ -207,4 +207,4 @@ curl http://localhost:8080/api/v1/orders/metrics
 📄 [`src/main/resources/docs/api/order-api.yaml`](src/main/resources/docs/api/order-api.yaml)
 
 Просмотр в Swagger Editor:  
-🌐 [Открыть в Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/Mr-Luckyman/mcloud-orders/feature/MKAFKA-3/src/main/resources/docs/api/order-api.yaml)
+🌐 [Открыть в Swagger Editor](https://github.com/Mr-Luckyman/mcloud-orders/blob/master/src/main/resources/docs/api/order-api.yaml)
