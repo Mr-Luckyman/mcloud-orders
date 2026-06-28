@@ -20,6 +20,8 @@ public class Order {
     private UUID customerId;
     private Double amount;
     private OrderStatus status;
+    private String region;
+    private Priority priority;
     private List<OrderLine> lines;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

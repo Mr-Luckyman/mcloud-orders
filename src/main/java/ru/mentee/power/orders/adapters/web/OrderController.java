@@ -1,30 +1,57 @@
 package ru.mentee.power.orders.adapters.web;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import ru.mentee.power.orders.adapters.metrics.ProducerMetricsRegistry;
 import ru.mentee.power.orders.adapters.web.dto.OrderRequest;
 import ru.mentee.power.orders.adapters.web.dto.OrderResponse;
+import ru.mentee.power.orders.adapters.web.mapper.OrderMapper;
+import ru.mentee.power.orders.ports.incoming.PlaceOrderCommand;
 import ru.mentee.power.orders.ports.incoming.PlaceOrderPort;
+import ru.mentee.power.orders.ports.incoming.PlaceOrderResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 public class OrderController {
+
     private final PlaceOrderPort placeOrderPort;
+    private final ProducerMetricsRegistry metricsRegistry;
 
     @PostMapping
-    public OrderResponse createOrder(@RequestBody OrderRequest request) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public OrderResponse createOrder(@Valid @RequestBody OrderRequest request) {
+        PlaceOrderCommand command = OrderMapper.toCommand(request);
+        PlaceOrderResult result = placeOrderPort.placeOrder(command);
+        return OrderMapper.toResponse(result);
     }
 
-    @GetMapping("/{orderId}")
-    public OrderResponse getOrder(@PathVariable String orderId) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    @GetMapping("/metrics")
+    public Map<String, Object> getMetrics() {
+        Map<String, Object> response = new HashMap<>();
+
+        // Общие метрики
+        Map<String, Long> totals = new HashMap<>();
+        totals.put("success", metricsRegistry.getTotalSuccess());
+        totals.put("failure", metricsRegistry.getTotalFailure());
+        response.put("totals", totals);
+
+        // Детали по топикам
+        Map<String, Map<String, Long>> topics = new HashMap<>();
+        for (String topic : metricsRegistry.getSuccessSnapshot().keySet()) {
+            Map<String, Long> topicMetrics = new HashMap<>();
+            topicMetrics.put("success", metricsRegistry.getSuccessCount(topic));
+            topicMetrics.put("failure", metricsRegistry.getFailureCount(topic));
+            topics.put(topic, topicMetrics);
+        }
+        response.put("topics", topics);
+
+        return response;
     }
 }
