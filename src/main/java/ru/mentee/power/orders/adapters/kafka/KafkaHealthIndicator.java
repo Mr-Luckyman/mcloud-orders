@@ -1,27 +1,33 @@
 package ru.mentee.power.orders.adapters.kafka;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
+import java.util.concurrent.TimeUnit;
 
 @Component
-@RequiredArgsConstructor
 public class KafkaHealthIndicator implements HealthIndicator {
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    private final KafkaAdmin kafkaAdmin;
+
+    public KafkaHealthIndicator(KafkaAdmin kafkaAdmin) {
+        this.kafkaAdmin = kafkaAdmin;
+    }
 
     @Override
     public Health health() {
-        try {
-            // Проверяем, что брокер доступен
-            var result = kafkaTemplate.getProducerFactory().createProducer()
-                    .partitionsFor(KafkaConfig.ORDER_EVENTS_TOPIC);
+        try (AdminClient admin = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
+            var topics = admin.listTopics(new ListTopicsOptions().timeoutMs(3000))
+                    .names()
+                    .get(3, TimeUnit.SECONDS);
 
             return Health.up()
-                    .withDetail("broker", "available")
-                    .withDetail("topic", KafkaConfig.ORDER_EVENTS_TOPIC)
+                    .withDetail("topics_count", topics.size())
+                    .withDetail("status", "connected")
                     .build();
         } catch (Exception e) {
             return Health.down()
