@@ -4,7 +4,8 @@ import ru.mentee.power.orders.domain.model.Order;
 import ru.mentee.power.orders.domain.model.OrderStatus;
 import ru.mentee.power.orders.domain.model.Priority;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,11 +13,11 @@ public record OrderEventPayload(
         UUID orderId,
         UUID customerId,
         String region,
-        Double amount,
+        BigDecimal amount,
         OrderStatus status,
         Priority priority,
         List<OrderLinePayload> lines,
-        LocalDateTime createdAt
+        Instant createdAt
 ) {
     public static OrderEventPayload from(Order order) {
         List<OrderLinePayload> linePayloads = order.getLines().stream()

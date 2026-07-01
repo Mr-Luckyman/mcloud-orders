@@ -11,7 +11,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.mentee.power.orders.adapters.kafka.OrderEventPayload;
-import ru.mentee.power.orders.domain.model.Priority;
 
 import java.util.HashMap;
 import java.util.Map;

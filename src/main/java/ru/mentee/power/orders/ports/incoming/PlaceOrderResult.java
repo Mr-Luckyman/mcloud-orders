@@ -2,13 +2,14 @@ package ru.mentee.power.orders.ports.incoming;
 
 import ru.mentee.power.orders.domain.model.OrderStatus;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 public record PlaceOrderResult(
         UUID orderId,
         OrderStatus status,
-        Double amount,
-        LocalDateTime dispatchedAt
+        BigDecimal amount,
+        Instant dispatchedAt
 ) {
 }

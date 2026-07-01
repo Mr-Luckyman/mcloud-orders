@@ -1,6 +1,7 @@
 package ru.mentee.power.orders.adapters.web.dto;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.Builder;
 public record OrderResponse(
         UUID orderId,
         String status,
-        Double amount,
-        LocalDateTime createdAt
+        BigDecimal amount,
+        Instant createdAt
 ) {
 }
