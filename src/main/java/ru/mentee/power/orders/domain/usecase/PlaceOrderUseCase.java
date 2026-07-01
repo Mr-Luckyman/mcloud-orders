@@ -11,7 +11,7 @@ import ru.mentee.power.orders.ports.incoming.PlaceOrderPort;
 import ru.mentee.power.orders.ports.incoming.PlaceOrderResult;
 import ru.mentee.power.orders.ports.outgoing.OrderEventPort;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class PlaceOrderUseCase implements PlaceOrderPort {
                 order.getId(),
                 order.getStatus(),
                 order.getAmount(),
-                LocalDateTime.now()
+                Instant.now()
         );
     }
 
@@ -51,7 +51,7 @@ public class PlaceOrderUseCase implements PlaceOrderPort {
                 .priority(command.priority())
                 .region(command.region())
                 .lines(lines)
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
                 .build();
     }
 }

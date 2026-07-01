@@ -1,6 +1,8 @@
 package ru.mentee.power.orders.domain.model;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,11 +20,13 @@ import lombok.Setter;
 public class Order {
     private UUID id;
     private UUID customerId;
-    private Double amount;
+    private BigDecimal amount;
     private OrderStatus status;
     private String region;
     private Priority priority;
     private List<OrderLine> lines;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private String eventId;
+    private Long kafkaOffset;
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import ru.mentee.power.orders.domain.model.Priority;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
 public record PlaceOrderCommand(
         @NotNull UUID customerId,
         @NotBlank String region,
-        @Positive Double amount,
+        @Positive BigDecimal amount,
         @NotNull Priority priority,
         @NotEmpty List<OrderLineCommand> lines
 ) {

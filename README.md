@@ -208,3 +208,52 @@ curl http://localhost:8080/api/v1/orders/metrics
 
 Просмотр в Swagger Editor:  
 🌐 [Открыть в Swagger Editor](https://github.com/Mr-Luckyman/mcloud-orders/blob/master/src/main/resources/docs/api/order-api.yaml)
+
+### 📖 Проверка чтения (Consumer)
+
+#### 1. Отправить заказ через REST (Producer)
+
+```bash
+curl -X POST http://localhost:8080/api/v1/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+        "customerId": "550e8400-e29b-41d4-a716-446655440000",
+        "region": "EU",
+        "priority": "HIGH",
+        "amount": 1200.50,
+        "lines": [
+            {"productId": "6ba7b814-9dad-11d1-80b4-00c04fd430c8", "quantity": 2, "price": 600.25}
+        ]
+      }'
+ ```
+
+#### 2. Проверить БД
+
+ ```bash 
+docker exec -it mcloud-orders-postgres psql -U orders -d orders \
+  -c "SELECT id, region, priority, amount, status, event_id FROM orders ORDER BY created_at;"
+ ```
+Ожидаемый результат: Запись с корректными данными.
+
+#### 3. Проверить метрики consumer'а
+```bush
+curl http://localhost:8080/api/v1/orders/consumers/metrics
+```
+Ожидаемый ответ:
+
+```json
+{
+  "totals": {
+    "processed": 1,
+    "failed": 0
+  },
+  "byPriority": {
+    "HIGH": 1
+  },
+  "byRegion": {
+    "EU": 1
+  },
+  "failedByPriority": {}
+}
+```
+

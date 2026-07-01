@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class KafkaHealthIndicator implements HealthIndicator {
 
     private final KafkaAdmin kafkaAdmin;
-
-    public KafkaHealthIndicator(KafkaAdmin kafkaAdmin) {
-        this.kafkaAdmin = kafkaAdmin;
-    }
 
     @Override
     public Health health() {
